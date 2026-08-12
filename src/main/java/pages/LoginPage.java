@@ -28,7 +28,7 @@ public class LoginPage extends BasePage {
     @FindBy(xpath = "//button[text()='Ok']")
     WebElement closeDialogueBtn;
 
-    @FindBy(css = "h1.title")
+    @FindBy(xpath = "//h1[text()='Login failed']")
     WebElement loginFailedDialogueMsg;
 
 

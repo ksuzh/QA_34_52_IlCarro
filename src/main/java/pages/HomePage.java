@@ -1,5 +1,6 @@
 package pages;
 
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -22,7 +23,11 @@ public class HomePage extends BasePage {
 
 
     public boolean isLogoutLinkPresent() {
-        return logoutLink.isDisplayed();
+        try {
+            return logoutLink.isDisplayed();
+        } catch (NoSuchElementException e) {
+            return false;
+        }
     }
 
     public void clickLoginLink() {
