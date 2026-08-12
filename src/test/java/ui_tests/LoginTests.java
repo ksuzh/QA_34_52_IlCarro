@@ -2,18 +2,24 @@ package ui_tests;
 
 import dto.User;
 import manager.AppManager;
+import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import pages.HomePage;
 import pages.LoginPage;
 
-public class LoginTests extends AppManager {
+import static utils.PositiveUserFactory.positiveUser;
 
+public class LoginTests extends AppManager {
+    HomePage homePage;
+    LoginPage loginPage;
 
     @BeforeMethod
     public void  openLoginPage() {
-        new HomePage(getDriver()).clickLoginLink();
+        homePage = new HomePage(getDriver());
+        homePage.clickLoginLink();
+        loginPage = new LoginPage(getDriver());
 
     }
 
@@ -23,15 +29,30 @@ public class LoginTests extends AppManager {
                 .email("w1@gmail.com")
                 .password("Qwerty!123")
                 .build();
-        LoginPage loginPage = new LoginPage(getDriver());
         loginPage.typeLoginForm(userLogin);
         loginPage.clickYallaBtn();
-        loginPage.isSuccessDialogueMsg();
-        loginPage.clickCloseSuccessDialogueBtn();
+        Assert.assertTrue(loginPage.isSuccessDialogueMsg("Logged in success"));
+        loginPage.clickCloseDialogueBtn();
+    }
+
+    @Test
+    public void  negativeLoginTestNonExistingUser () {
+        User user = positiveUser();
+        loginPage.typeLoginForm(user);
+        loginPage.clickYallaBtn();
+        Assert.assertTrue(loginPage.isLoginFailedDialogueMsg("Login failed"));
+        loginPage.clickCloseDialogueBtn();
+    }
+
+    @Test
+    public void  negativeLoginTestEmptyFields () {
+        Assert.assertFalse(loginPage.isYallaBtnEnabled());
     }
 
     @AfterMethod
     public void  logout() {
-        new HomePage( getDriver() ).clickLogoutLink();
+        if(homePage.isLogoutLinkPresent()){
+            homePage.clickLogoutLink();
+        }
     }
 }

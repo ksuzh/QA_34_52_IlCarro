@@ -26,7 +26,11 @@ public class LoginPage extends BasePage {
     WebElement successDialogueMsg;
 
     @FindBy(xpath = "//button[text()='Ok']")
-    WebElement closeSuccessDialogueBtn;
+    WebElement closeDialogueBtn;
+
+    @FindBy(css = "h1.title")
+    WebElement loginFailedDialogueMsg;
+
 
 
     public void typeLoginForm(User userLogin) {
@@ -38,12 +42,20 @@ public class LoginPage extends BasePage {
         click(yallaBtn);
     }
 
-    public boolean isSuccessDialogueMsg() {
-        return isElementPresent(successDialogueMsg);
+    public boolean isSuccessDialogueMsg(String message) {
+        return isTextInElementPresent(successDialogueMsg, message);
     }
 
-    public void clickCloseSuccessDialogueBtn() {
-        click(closeSuccessDialogueBtn);
+    public boolean isLoginFailedDialogueMsg(String message) {
+        return isTextInElementPresent(loginFailedDialogueMsg, message);
+    }
+
+    public void clickCloseDialogueBtn() {
+        click(closeDialogueBtn);
+    }
+
+    public boolean isYallaBtnEnabled() {
+        return yallaBtn.isEnabled();
     }
 
 

@@ -21,6 +21,10 @@ public class HomePage extends BasePage {
     WebElement logoutLink;
 
 
+    public boolean isLogoutLinkPresent() {
+        return logoutLink.isDisplayed();
+    }
+
     public void clickLoginLink() {
         click(loginLink);
     }
