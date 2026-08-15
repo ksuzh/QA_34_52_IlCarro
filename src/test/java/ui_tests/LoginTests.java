@@ -6,14 +6,17 @@ import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import org.testng.asserts.SoftAssert;
 import pages.HomePage;
 import pages.LoginPage;
 
 import static utils.PositiveUserFactory.positiveUser;
+import static utils.PropertiesReader.*;
 
 public class LoginTests extends AppManager {
     HomePage homePage;
     LoginPage loginPage;
+    SoftAssert softAssert = new SoftAssert();
 
     @BeforeMethod
     public void  openLoginPage() {
@@ -26,8 +29,8 @@ public class LoginTests extends AppManager {
     @Test
 	public void  positiveLoginTest () {
         User userLogin = User.builder()
-                .email("w1@gmail.com")
-                .password("Qwerty!123")
+                .email(getProperty("base.properties", "email"))
+                .password(getProperty("base.properties", "password"))
                 .build();
         loginPage.typeLoginForm(userLogin);
         loginPage.clickYallaBtn();
@@ -36,8 +39,23 @@ public class LoginTests extends AppManager {
     }
 
     @Test
-    public void  negativeLoginTestNonExistingUser () {
-        User user = positiveUser();
+    public void  negativeLoginTestWrongEmail () {
+        User user = User.builder()
+                .email(getProperty("base.properties", "wrongEmail"))
+                .password(getProperty("base.properties", "password"))
+                .build();
+        loginPage.typeLoginForm(user);
+        loginPage.clickYallaBtn();
+        Assert.assertTrue(loginPage.isLoginFailedDialogueMsg("Login failed"));
+        loginPage.clickCloseDialogueBtn();
+    }
+
+    @Test
+    public void  negativeLoginTestWrongPassword () {
+        User user = User.builder()
+                .email(getProperty("base.properties", "email"))
+                .password(getProperty("base.properties", "wrongPassword"))
+                .build();
         loginPage.typeLoginForm(user);
         loginPage.clickYallaBtn();
         Assert.assertTrue(loginPage.isLoginFailedDialogueMsg("Login failed"));
@@ -47,6 +65,49 @@ public class LoginTests extends AppManager {
     @Test
     public void  negativeLoginTestEmptyFields () {
         Assert.assertFalse(loginPage.isYallaBtnEnabled());
+    }
+
+    @Test
+    public void  negativeLoginTestEmptyFieldsWithClick () {
+        User user = User.builder()
+                .email("")
+                .password("")
+                .build();
+        loginPage.typeLoginForm(user);
+        loginPage.clickYallaBtn();
+        softAssert.assertFalse(loginPage.isYallaBtnEnabled(), "validate isYallaBtnEnabled()");
+        System.out.println("test working");
+        softAssert.assertTrue(loginPage.isTextInErrorPresent("Email is required"),
+                "validate message: Email is required");
+        softAssert.assertTrue(loginPage.isTextInErrorPresent("Password is required"),
+                "validate message: Password is required");
+        softAssert.assertAll();
+    }
+
+    @Test
+    public void  negativeLoginTestEmptyEmail () {
+        User user = User.builder()
+                .email("")
+                .password(getProperty("base.properties", "password"))
+                .build();
+        loginPage.typeLoginForm(user);
+    //    loginPage.clickYallaBtn();
+        Assert.assertTrue(loginPage.isTextInErrorPresent("Email is required"));
+    }
+
+    @Test
+    public void  negativeLoginTestEmptyPassword () {
+        User user = User.builder()
+                .email(getProperty("base.properties", "email"))
+                .password("")
+                .build();
+        loginPage.typeLoginForm(user);
+        loginPage.clickYallaBtn();
+        softAssert.assertFalse(loginPage.isYallaBtnEnabled(),
+                "validate isYallaBtnEnabled()");
+        softAssert.assertTrue(loginPage.isTextInErrorPresent("Password is required"),
+                "validate message: Password is required");
+        softAssert.assertAll();
     }
 
     @AfterMethod
