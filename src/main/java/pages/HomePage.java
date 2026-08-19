@@ -23,6 +23,9 @@ public class HomePage extends BasePage {
     @FindBy(xpath = "//a[@href='/logout?url=%2Fsearch']")
     WebElement logoutLink;
 
+    @FindBy(xpath = "//a[@href='/registration?url=%2Fsearch']")
+    WebElement signUpLink;
+
 
     public boolean isLogoutLinkPresent() {
         try {
@@ -34,6 +37,10 @@ public class HomePage extends BasePage {
 
     public void clickLoginLink() {
         click(loginLink);
+    }
+
+    public void clickSignUpLink() {
+        click(signUpLink);
     }
 
 
