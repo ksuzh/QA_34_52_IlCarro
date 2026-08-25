@@ -6,6 +6,11 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.time.Duration;
+
 import static utils.PropertiesReader.*;
 
 public class HomePage extends BasePage {
@@ -25,6 +30,9 @@ public class HomePage extends BasePage {
 
     @FindBy(xpath = "//a[@href='/registration?url=%2Fsearch']")
     WebElement signUpLink;
+
+    @FindBy(xpath = "//a[@href='/let-car-work']")
+    WebElement letCarWorkLink;
 
 
     public boolean isLogoutLinkPresent() {
@@ -46,5 +54,12 @@ public class HomePage extends BasePage {
 
     public void clickLogoutLink() {
         click(logoutLink);
+    }
+
+    public void clickLetCarWorkLink() {
+        new WebDriverWait(driver, Duration.ofSeconds(10))
+                .until(ExpectedConditions.elementToBeClickable(letCarWorkLink))
+                .click();
+        letCarWorkLink.click();
     }
 }

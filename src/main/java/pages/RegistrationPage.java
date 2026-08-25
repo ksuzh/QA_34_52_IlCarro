@@ -10,9 +10,12 @@ import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
 public class RegistrationPage extends BasePage {
+
+    LoginPage loginPage;
     public RegistrationPage(WebDriver driver) {
         PageFactory.initElements(new AjaxElementLocatorFactory
                 (driver, 10), this);
+        LoginPage loginPage = new LoginPage(driver);
     }
 
     @FindBy(xpath = "//input[@id='name']")
@@ -36,13 +39,17 @@ public class RegistrationPage extends BasePage {
     @FindBy(xpath = "//h1[text()='Registered']")
     WebElement registeredDialogueMsg;
 
+    @FindBy(xpath = "//label[@for='terms-of-use']")
+    WebElement checkBoxLabel;
+
 
     public void typeRegistrationForm(User user) {
         type(nameField, user.getFirstName());
         type(lastNameField, user.getLastName());
         type(emailField, user.getEmail());
         type(passwordField, user.getPassword());
-        clickCheckboxTermsOfUse();
+        //clickCheckboxTermsOfUse();
+        clickCheckboxWithActions();
     }
 
     public void clickYallaBtn() {
@@ -52,6 +59,14 @@ public class RegistrationPage extends BasePage {
     public void clickCheckboxTermsOfUse() {
         JavascriptExecutor js = (JavascriptExecutor) driver;
         js.executeScript("arguments[0].click();", checkBoxTermsOfUse);
+    }
+
+    public void clickCheckboxWithActions(){
+        int x = checkBoxLabel.getSize().getWidth();
+        int y = checkBoxLabel.getSize().getHeight();
+        System.out.println("x = " + x + " y = " + y);
+        Actions actions = new Actions(driver);
+        actions.moveToElement(checkBoxLabel, - x / 10 * 3, - y / 2).click().perform();
     }
 
 //    public void clickCheckBoxTermsOfUse() {
@@ -66,6 +81,5 @@ public class RegistrationPage extends BasePage {
     public boolean isRegisteredDialogueMsg() {
         return isElementPresent(registeredDialogueMsg);
     }
-
 
 }
