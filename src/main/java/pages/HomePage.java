@@ -57,9 +57,6 @@ public class HomePage extends BasePage {
     }
 
     public void clickLetCarWorkLink() {
-        new WebDriverWait(driver, Duration.ofSeconds(10))
-                .until(ExpectedConditions.elementToBeClickable(letCarWorkLink))
-                .click();
-        letCarWorkLink.click();
+        clickWait(letCarWorkLink);
     }
 }

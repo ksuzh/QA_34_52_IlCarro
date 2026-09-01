@@ -5,13 +5,17 @@ import manager.AppManager;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
 import pages.HomePage;
 import pages.LoginPage;
+import utils.RetryAnalyzer;
+import utils.TestNGListener;
 
 import static utils.PositiveUserFactory.positiveUser;
 import static utils.PropertiesReader.*;
+@Listeners(TestNGListener.class)
 
 public class LoginTests extends AppManager {
     HomePage homePage;
@@ -84,7 +88,7 @@ public class LoginTests extends AppManager {
         softAssert.assertAll();
     }
 
-    @Test
+    @Test(retryAnalyzer = RetryAnalyzer.class)
     public void  negativeLoginTestEmptyEmail () {
         User user = User.builder()
                 .email("")
