@@ -68,11 +68,17 @@ public class LetTheCarWorkPage extends BasePage {
     @FindBy(xpath = "//div[@class='error']/div")
     WebElement errorNoteYear;
 
+//    public void clickBtnSubmitWithJs() {
+//        JavascriptExecutor js = (JavascriptExecutor) driver;
+//        js.executeScript("document.querySelector(\"button[type='submit']\")" +
+//                ".removeAttribute('disabled')");
+//        btnSubmit.click();
+//    }
+
+
+
     public void clickBtnSubmitWithJs() {
-        JavascriptExecutor js = (JavascriptExecutor) driver;
-        js.executeScript("document.querySelector(\"button[type='submit']\")" +
-                ".removeAttribute('disabled')");
-        btnSubmit.click();
+        clickBtnWithJs(btnSubmit);
     }
 
     public boolean isBtnSubmitEnabled() {

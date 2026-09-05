@@ -1,0 +1,54 @@
+package ui_tests;
+
+import manager.AppManager;
+import org.testng.Assert;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Listeners;
+import org.testng.annotations.Test;
+import org.testng.asserts.SoftAssert;
+import pages.HomePage;
+import utils.TestNGListener;
+import utils.WDListener;
+
+import java.time.LocalDate;
+
+@Listeners(TestNGListener.class)
+public class SearchCarTests extends AppManager {
+    HomePage homePage;
+    SoftAssert softAssert = new SoftAssert();
+
+    @BeforeMethod
+    public void openHomePage() {
+        homePage = new HomePage(getDriver());
+    }
+
+    @Test
+    public void searchCarPositiveTest() {
+        String city = "Haifa";
+        LocalDate startDate = LocalDate.now().plusDays(2);
+        LocalDate endDate = LocalDate.now().plusDays(8);
+        homePage.typeSearchForm(city, startDate, endDate);
+        homePage.clickBtnYalla();
+        Assert.assertTrue(homePage.isUrlContainsText("search/results"));
+    }
+
+    @Test
+    public void searchCarOneDayNegativeTest() {
+        String city = "Haifa";
+        LocalDate startDate = LocalDate.now();
+        LocalDate endDate = LocalDate.now();
+        homePage.typeSearchForm(city, startDate, endDate);
+        homePage.clickBtnYalla();
+        Assert.assertTrue(homePage.isTextInErrorMessageDates("can't book car for less than a day"));
+    }
+
+
+    @Test
+    public void searchCarNegativeTest2() {
+        homePage.clickEmptyFieldsSearchForm();
+        homePage.clickBtnYalla();
+        softAssert.assertTrue(homePage.isTextInErrorMessageDates("Dates are required"));
+        softAssert.assertFalse(homePage.isbtnYallaDisabled());
+        softAssert.assertAll();
+    }
+}

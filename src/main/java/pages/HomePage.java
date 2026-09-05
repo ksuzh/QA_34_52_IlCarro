@@ -10,6 +10,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
+import java.time.LocalDate;
 
 import static utils.PropertiesReader.*;
 
@@ -34,6 +35,20 @@ public class HomePage extends BasePage {
     @FindBy(xpath = "//a[@href='/let-car-work']")
     WebElement letCarWorkLink;
 
+    @FindBy(id="city")
+    WebElement inputCity;
+
+    @FindBy(id="dates")
+    WebElement inputDates;
+
+    @FindBy(xpath = "//button[@type='submit']")
+    WebElement btnYalla;
+
+    @FindBy(xpath = "//div[@class = 'error']")
+    WebElement errorMessageDates;
+
+    @FindBy(xpath = "//span[@class= 'description']")
+    WebElement backArea;
 
     public boolean isLogoutLinkPresent() {
         try {
@@ -59,4 +74,43 @@ public class HomePage extends BasePage {
     public void clickLetCarWorkLink() {
         clickWait(letCarWorkLink);
     }
+
+    public void clickBtnYalla() {
+        clickBtnWithJs(btnYalla);
+    }
+
+    public void typeSearchForm(String city, LocalDate startDate, LocalDate endDate) {
+        inputCity.sendKeys(city);
+//        System.out.println(startDate);
+//        System.out.println(endDate);
+//
+//        System.out.println(startDate.getMonthValue());
+//        System.out.println(startDate.getDayOfMonth());
+        String dates =
+                startDate.getMonthValue() + "/"
+                        + startDate.getDayOfMonth() + "/"
+                        + startDate.getYear() + " - "
+                        + endDate.getMonthValue() + "/"
+                        + endDate.getDayOfMonth() + "/"
+                        + endDate.getYear();
+        System.out.println(dates);
+        inputDates.sendKeys(dates);
+    }
+
+    public boolean isTextInErrorMessageDates(String errorDate) {
+        return isTextInErrorPresent(errorDate);
+    }
+
+    public void clickEmptyFieldsSearchForm() {
+        click(inputDates);
+ //       click(inputDates);
+        click(backArea);
+        click(inputCity);
+
+        click(btnYalla);
+    }
+     public boolean isbtnYallaDisabled() {
+        return  btnYalla.isEnabled();
+     }
+
 }

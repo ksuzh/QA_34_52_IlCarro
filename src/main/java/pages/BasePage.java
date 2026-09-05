@@ -1,6 +1,7 @@
 package pages;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -98,6 +99,23 @@ public abstract class BasePage {
 //            e.printStackTrace();
 //            System.out.println("created exception");
             logger.error("created exception: ", e);
+        }
+        return false;
+    }
+
+    public void clickBtnWithJs(WebElement btn) {
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        js.executeScript("document.querySelector(\"button[type='submit']\")" +
+                ".removeAttribute('disabled')");
+        btn.click();
+    }
+
+    public boolean isUrlContainsText(String text){
+        try{
+            return new WebDriverWait(driver, Duration.ofSeconds(5))
+                    .until(ExpectedConditions.urlContains(text));
+        }catch(RuntimeException e){
+            e.printStackTrace();
         }
         return false;
     }
