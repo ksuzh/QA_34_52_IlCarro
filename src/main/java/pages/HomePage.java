@@ -1,8 +1,6 @@
 package pages;
 
-import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
@@ -45,7 +43,7 @@ public class HomePage extends BasePage {
     WebElement btnYalla;
 
     @FindBy(xpath = "//div[@class = 'error']")
-    WebElement errorMessageDates;
+    WebElement errorMessage;
 
     @FindBy(xpath = "//span[@class= 'description']")
     WebElement backArea;
@@ -104,9 +102,12 @@ public class HomePage extends BasePage {
     public void clickEmptyFieldsSearchForm() {
         click(inputDates);
  //       click(inputDates);
-        click(backArea);
-        click(inputCity);
-
+//        click(backArea);
+//        inputDates.sendKeys(Keys.TAB);
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        js.executeScript("arguments[0].blur();", inputDates);
+        new WebDriverWait(driver, Duration.ofSeconds(5))
+                .until(ExpectedConditions.visibilityOf(errorMessage));
         click(btnYalla);
     }
      public boolean isbtnYallaDisabled() {
