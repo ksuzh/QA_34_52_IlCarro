@@ -48,6 +48,9 @@ public class HomePage extends BasePage {
     @FindBy(xpath = "//span[@class= 'description']")
     WebElement backArea;
 
+    @FindBy(xpath = "//button[@aria-label='Choose month and year']")
+    WebElement btnYearOnCalendar;
+
     public boolean isLogoutLinkPresent() {
         try {
             return logoutLink.isDisplayed();
@@ -95,8 +98,36 @@ public class HomePage extends BasePage {
         inputDates.sendKeys(dates);
     }
 
-    public boolean isTextInErrorMessageDates(String errorDate) {
-        return isTextInErrorPresent(errorDate);
+    public void typeSearchFormWithCalendar(String city,
+                                           LocalDate startDate, LocalDate endDate) {
+        inputCity.sendKeys(city);
+        inputDates.click();
+        typeCalendar(startDate);
+        typeCalendar(endDate);
+    }
+
+    private void typeCalendar(LocalDate date) {
+        btnYearOnCalendar.click();
+        String year = Integer.toString(date.getYear());
+        WebElement btnYear = driver.findElement
+                (By.xpath("//td[@aria-label='" + year + "']"));
+        btnYear.click();
+        String month = createMonth(date.getMonth().toString());
+        System.out.println(month);
+        WebElement btnMonth = driver.findElement(By
+                .xpath("//td[@aria-label='" + month + " " + year + "']"));
+        btnMonth.click();
+        System.out.println(date.getDayOfMonth());
+        String day = String.valueOf(date.getDayOfMonth());
+        WebElement btnDay = driver.findElement(By
+                .xpath("//td[@aria-label='" + month + " " + day + ", " + year + "']"));
+        btnDay.click();
+
+    }
+
+    private String createMonth(String month) {
+        return new StringBuilder().append(month
+                .substring(0,1).toUpperCase()).append(month.substring(1).toLowerCase()).toString();
     }
 
     public void clickEmptyFieldsSearchForm() {

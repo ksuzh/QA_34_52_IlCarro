@@ -22,7 +22,7 @@ public class RegistrationTests extends AppManager {
     HomePage homePage;
     RegistrationPage registrationPage;
 
-    @BeforeMethod
+    @BeforeMethod(alwaysRun = true)
     public void  openRegistrationPage() {
         logger.info("Start registration test");
         homePage = new HomePage(getDriver());
@@ -30,7 +30,7 @@ public class RegistrationTests extends AppManager {
         registrationPage = new RegistrationPage(getDriver());
     }
 
-    @Test
+    @Test(groups = {"smoke", "regress", "user", "positive"})
     public void positiveRegistrationTest () {
         User user = positiveUser();
         registrationPage.typeRegistrationForm(user);

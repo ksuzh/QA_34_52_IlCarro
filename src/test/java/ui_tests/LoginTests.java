@@ -22,7 +22,7 @@ public class LoginTests extends AppManager {
     LoginPage loginPage;
     SoftAssert softAssert = new SoftAssert();
 
-    @BeforeMethod
+    @BeforeMethod(alwaysRun = true)
     public void  openLoginPage() {
         homePage = new HomePage(getDriver());
         homePage.clickLoginLink();
@@ -30,7 +30,7 @@ public class LoginTests extends AppManager {
 
     }
 
-    @Test
+    @Test(groups = {"smoke", "regress", "user", "positive"})
 	public void  positiveLoginTest () {
         User userLogin = User.builder()
                 .email(getProperty("base.properties", "email"))

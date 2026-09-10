@@ -25,7 +25,7 @@ public class LetCarWorkClassTests extends AppManager {
     LoginPage loginPage;
     LetTheCarWorkPage letTheCarWorkPage;
 
-    @BeforeMethod
+    @BeforeMethod(alwaysRun = true)
     public void goToLetTheCarWorkPage() {
         //new HomePage(getDriver()).clickBtnLogin();
         //loginPage = new LoginPage(getDriver());
@@ -44,7 +44,7 @@ public class LetCarWorkClassTests extends AppManager {
                 .clickHeaderButtons(HeaderMenu.LET_THE_CAR_WORK);
     }
 
-    @Test
+    @Test(groups = {"smoke", "regress", "car", "positive"})
     public void addNewCarPositiveTest(){
         Car car = positiveCar();
         System.out.println(car);
