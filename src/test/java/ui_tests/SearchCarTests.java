@@ -81,13 +81,38 @@ public class SearchCarTests extends AppManager {
         softAssert.assertAll();
     }
 
+    @Test
+    public void searchCarStartDateAfterEndDateCalendarNegativeTest() {
+        String city = "Haifa";
+        LocalDate startDate = LocalDate.now().plusDays(10);
+        LocalDate endDate = LocalDate.now()
+                .plusDays(7);
+        homePage.typeSearchForm(city, startDate, endDate);
+        homePage.clickBtnYalla();
+        Assert.assertTrue(homePage.isTextInErrorPresent
+                ("Second date must be after first date"));
 
-//    @Test
-//    public void searchCarNegativeTest2() {
-//        homePage.clickEmptyFieldsSearchForm();
-//        homePage.clickBtnYalla();
-//        softAssert.assertTrue(homePage.isTextInErrorPresent("Dates are required"));
-//        softAssert.assertFalse(homePage.isbtnYallaDisabled());
-//        softAssert.assertAll();
-//    }
+    }
+
+    @Test
+    public void searchCarWithCalendarPastYearNegativeTest() {
+        LocalDate startDate = LocalDate.now().minusYears(2);
+        Assert.assertTrue(homePage.isYearDisabled(startDate));
+    }
+
+    @Test
+    public void searchCarEmptyDatesNegativeTest() {
+        homePage.clickEmptyFieldsSearchForm();
+        Assert.assertTrue(homePage.isTextInErrorPresent("Dates are required"));
+    }
+
+    @Test
+    public void searchCarNegativeMoreOneYearWithCalendarTest() {
+        String city = "Haifa";
+        LocalDate startDate = LocalDate.now();
+        LocalDate endDate = LocalDate.now()
+                .plusYears(1).plusDays(1);
+        Assert.assertTrue(homePage.isDateDisabled(city, startDate, endDate));
+
+    }
 }

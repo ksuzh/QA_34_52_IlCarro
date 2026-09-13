@@ -30,7 +30,7 @@ public class AppManager {
         driver = new EventFiringDecorator<>(webDriverListener).decorate(driver);
     }
 
-    @AfterMethod(alwaysRun = true)
+    @AfterMethod(alwaysRun = true, enabled = false)
     public void tearDown() {
         if (driver != null) {
             driver.quit();

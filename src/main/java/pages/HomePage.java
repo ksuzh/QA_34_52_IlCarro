@@ -42,14 +42,19 @@ public class HomePage extends BasePage {
     @FindBy(xpath = "//button[@type='submit']")
     WebElement btnYalla;
 
-    @FindBy(xpath = "//div[@class = 'error']")
+    @FindBy(xpath = "//div[contains(@class, 'error')]")
     WebElement errorMessage;
 
-    @FindBy(xpath = "//span[@class= 'description']")
-    WebElement backArea;
 
     @FindBy(xpath = "//button[@aria-label='Choose month and year']")
     WebElement btnYearOnCalendar;
+
+    @FindBy(id="sat-datepicker-0")
+    WebElement calendar;
+
+    @FindBy(xpath = "//div[contains(@class, 'cdk-overlay-backdrop') and contains(@class, 'cdk-overlay-backdrop-showing')]")
+    WebElement calendarBackdrop;
+
 
     public boolean isLogoutLinkPresent() {
         try {
@@ -106,23 +111,82 @@ public class HomePage extends BasePage {
         typeCalendar(endDate);
     }
 
-    private void typeCalendar(LocalDate date) {
-        btnYearOnCalendar.click();
-        String year = Integer.toString(date.getYear());
-        WebElement btnYear = driver.findElement
-                (By.xpath("//td[@aria-label='" + year + "']"));
-        btnYear.click();
-        String month = createMonth(date.getMonth().toString());
-        System.out.println(month);
-        WebElement btnMonth = driver.findElement(By
-                .xpath("//td[@aria-label='" + month + " " + year + "']"));
-        btnMonth.click();
-        System.out.println(date.getDayOfMonth());
-        String day = String.valueOf(date.getDayOfMonth());
-        WebElement btnDay = driver.findElement(By
-                .xpath("//td[@aria-label='" + month + " " + day + ", " + year + "']"));
-        btnDay.click();
+    public boolean isDateDisabled(String city, LocalDate firstDate, LocalDate dateToCheck) {
+        inputCity.sendKeys(city);
+        inputDates.click();
 
+        if (firstDate != null) {
+            typeCalendar(firstDate);
+        }
+        return isCalendarDayDisabled(dateToCheck);
+    }
+
+//    private void typeCalendar(LocalDate date) {
+//        btnYearOnCalendar.click();
+//        String year = Integer.toString(date.getYear());
+//        WebElement btnYear = driver.findElement
+//                (By.xpath("//td[@aria-label='" + year + "']"));
+//        btnYear.click();
+//        String month = createMonth(date.getMonth().toString());
+//        System.out.println(month);
+//        WebElement btnMonth = driver.findElement(By
+//                .xpath("//td[@aria-label='" + month + " " + year + "']"));
+//        btnMonth.click();
+//        System.out.println(date.getDayOfMonth());
+//        String day = String.valueOf(date.getDayOfMonth());
+//        WebElement btnDay = driver.findElement(By
+//                .xpath("//td[@aria-label='" + month + " " + day + ", " + year + "']"));
+//        btnDay.click();
+//    }
+
+    private void typeCalendar(LocalDate date) {
+        navigateCalendar(date);
+        String year = String.valueOf(date.getYear());
+        String month = createMonth(date.getMonth().toString());
+        String day = String.valueOf(date.getDayOfMonth());
+        WebElement btnDay = driver.findElement(
+                By.xpath("//td[@aria-label='" + month + " " + day + ", " + year + "']")
+        );
+        btnDay.click();
+    }
+
+    private boolean isCalendarDayDisabled(LocalDate date) {
+        navigateCalendar(date);
+        String year = String.valueOf(date.getYear());
+        String month = createMonth(date.getMonth().toString());
+        String day = String.valueOf(date.getDayOfMonth());
+
+        WebElement btnDay = driver.findElement(
+                By.xpath("//td[@aria-label='" + month + " " + day + ", " + year + "']")
+        );
+
+        return btnDay.getAttribute("class").contains("disabled");
+    }
+
+    public boolean isYearDisabled(LocalDate date) {
+        inputDates.click();
+        btnYearOnCalendar.click();
+        String year = String.valueOf(date.getYear());
+        WebElement btnYear = driver.findElement(
+                By.xpath("//td[@aria-label='" + year + "']"));
+        return btnYear.getAttribute("class").contains("disabled");
+    }
+
+    private void navigateCalendar(LocalDate date) {
+        btnYearOnCalendar.click();
+        String year = String.valueOf(date.getYear());
+
+        WebElement btnYear = driver.findElement(
+                By.xpath("//td[@aria-label='" + year + "']")
+        );
+        btnYear.click();
+
+        String month = createMonth(date.getMonth().toString());
+
+        WebElement btnMonth = driver.findElement(
+                By.xpath("//td[@aria-label='" + month + " " + year + "']")
+        );
+        btnMonth.click();
     }
 
     private String createMonth(String month) {
@@ -132,14 +196,15 @@ public class HomePage extends BasePage {
 
     public void clickEmptyFieldsSearchForm() {
         click(inputDates);
- //       click(inputDates);
-//        click(backArea);
-//        inputDates.sendKeys(Keys.TAB);
-        JavascriptExecutor js = (JavascriptExecutor) driver;
-        js.executeScript("arguments[0].blur();", inputDates);
-        new WebDriverWait(driver, Duration.ofSeconds(5))
+        closeCalendar();
+        new WebDriverWait(driver,Duration.ofSeconds(5))
                 .until(ExpectedConditions.visibilityOf(errorMessage));
-        click(btnYalla);
+    }
+
+    public void closeCalendar() {
+        new WebDriverWait(driver,Duration.ofSeconds(5))
+                .until(ExpectedConditions.visibilityOf(calendar));
+        click(calendarBackdrop);
     }
      public boolean isbtnYallaDisabled() {
         return  btnYalla.isEnabled();

@@ -22,7 +22,7 @@ public abstract class BasePage {
         this.driver = wd;
     }
 
-    @FindBy(xpath = "//div[@class='error']")
+    @FindBy(xpath = "//div[contains(@class,'error')]")
     List<WebElement> listErrors;
 
     public <T extends BasePage> T clickHeaderButtons(HeaderMenu item){
