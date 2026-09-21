@@ -1,3 +1,17 @@
 ./gradlew clean
 ./gradlew clean test
 ./gradlew clean qa
+./gradlew clean scope
+./gradlew clean scope -Pbrowser=firefox
+./gradlew clean qa_suites -Dsuite=registration_login
+./gradlew clean groups -Dgroups=smoke
+
+
+baseUrl=https://ilcarro.web.app/search
+email=w1@gmail.com
+password=Qwerty!123
+
+password_for_reqistration=Asdfg!567
+
+wrongEmail=w12@gmail.com
+wrongPassword=Qwerty!1234

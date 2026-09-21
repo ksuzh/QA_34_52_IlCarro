@@ -17,12 +17,12 @@ public class SearchCarTests extends AppManager {
     HomePage homePage;
     SoftAssert softAssert = new SoftAssert();
 
-    @BeforeMethod
+    @BeforeMethod(alwaysRun = true)
     public void openHomePage() {
         homePage = new HomePage(getDriver());
     }
 
-    @Test
+    @Test(groups = "smoke")
     public void searchCarPositiveTest() {
         String city = "Haifa";
         LocalDate startDate = LocalDate.now().plusDays(2);

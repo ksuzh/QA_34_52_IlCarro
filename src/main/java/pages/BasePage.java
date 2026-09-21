@@ -25,6 +25,18 @@ public abstract class BasePage {
     @FindBy(xpath = "//div[contains(@class,'error')]")
     List<WebElement> listErrors;
 
+    public boolean isTextInErrorPresent(String text) {
+        if (listErrors == null || listErrors.isEmpty()) {
+            return false;
+        }
+        for (WebElement element : listErrors) {
+            if (element.getText().contains(text)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public <T extends BasePage> T clickHeaderButtons(HeaderMenu item){
         new WebDriverWait(driver, Duration.ofSeconds(10))
                 .until(ExpectedConditions.elementToBeClickable
@@ -58,17 +70,6 @@ public abstract class BasePage {
         }
     }
 
-    public boolean isTextInErrorPresent(String text) {
-        if (listErrors == null || listErrors.isEmpty()) {
-            return false;
-        }
-        for (WebElement element : listErrors) {
-            if (element.getText().contains(text)) {
-                return true;
-            }
-        }
-        return false;
-    }
 
     public void click(WebElement element) {
         element.click();
